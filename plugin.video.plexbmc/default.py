@@ -88,8 +88,8 @@ if g_authentication == "true":
     
     #Set up an internal XBMC header string, which is appended to all *XBMC* processed URLs.
     XBMCInternalHeaders="|X-Plex-User="+g_txheaders['X-Plex-User']+"&X-Plex-Pass="+g_txheaders['X-Plex-Pass']
-    
-pluginhandle = int(sys.argv[1])
+
+
 
 ################################ Common
 # Connect to a server and retrieve the HTML page
@@ -222,7 +222,7 @@ def addLink(url,properties,arguments):
                 
         #Set the fanart image if it has been enabled
         try:
-            liz.setProperty('fanart_image', str(arguments['fanart_image']+XBMCInternalHeaders))
+            liz.setProperty('fanart_image', str(arguments['fanart_image']))
             printDebug( "Setting fan art as " + str(arguments['fanart_image']),addLink.__name__)
         except: pass
         
@@ -362,7 +362,7 @@ def ROOT():
                     else:
                         properties['title']=server[0]+": "+arguments['title']
                 except:
-                    propoerties['title']="unknown"
+                    properties['title']="unknown"
                 
                 #Determine what we are going to do process after a link is selected by the user, based on the content we find
                 if arguments['type'] == 'show':
@@ -636,9 +636,9 @@ def MoviesET(url='',tree=etree,server=''):
                
             #Get a nice big picture  
             try:
-                fanart=arguments['art'].split('?')[0] #drops the guid from the fanart image
-                art_url='http://'+server+fanart.encode('utf-8')
-                art_url='http://'+server+':32400/photo/:/transcode?url='+art_url+'&width=1280&height=720'
+                fanart=arguments['art']#.split('?')[0] #drops the guid from the fanart image
+                art_url='http://'+server+fanart#.encode('utf-8')
+                #art_url='http://'+server+':32400/photo/:/transcode?url='+art_url+'&width=1280&height=720'
             except:  
                 #or use a stock default one
                 art_url=g_loc+'/resources/movie_art.jpg'
@@ -2322,100 +2322,242 @@ def install(url, name):
         
         
     return
+   
+def skin():
+    #Gather some data and set the windo properties
+    printDebug("== ENTER: skin() ==")
+    #Get the global host variable set in settings
+    host=g_host
+    WINDOW = xbmcgui.Window( 10000 )
+ 
+    Servers=[]
+      
+    #If we have a remote host, then don;t do local discovery as it won't work
+    if g_bonjour == "true":
+        #Get the HTML for the URL
+        url = 'http://'+host+':32400/servers'
+        html=getURL(url)
+            
+        if html is False:
+            return
+               
+        #Pass HTML to BSS to convert it into a nice parasble tree.
+        tree=etree.fromstring(html)
+                
+        #Now, find all those server tags
+        LibraryTags=tree.findall('Server')        
+       
+        #Now, for each tag, pull out the name of the server and it's network name
+        for object in LibraryTags:
+            name=object.get('name').encode('utf-8')
+            host=object.get('host')
+            Servers.append([name,host])
+    else:
+        Servers.append(["remote",g_host])
+        Servers += g_serverList
     
+    #Propert to set total number of servers we are talking to
+    WINDOW.setProperty("plexbmc.numServers", str(len(Servers)))
+    printDebug("Number of servers for skin: " + str(len(Servers)), skin.__name__)
+    
+    sectionCount=0
+    
+    #For each of the servers we have identified
+    for server in Servers:
+                                      
+        #Get friendly name
+        url='http://'+server[1]+':32400'
+        html=getURL(url)
+
+        if html is False:
+            continue
+
+        tree=etree.fromstring(html)
+        try:
+            if not tree.get('friendlyName') == "":
+                server[0]=tree.get('friendlyName')
+            else:
+                server[0]=server[1]
+        except:
+            server[0]=server[1]
+            
+        #dive into the library section with BS        
+        url='http://'+server[1]+':32400/library/sections'
+        html=getURL(url)
+            
+        if html is False:
+            continue
+                
+        tree = etree.fromstring(html)
+            
+        #Find all the directory tags, as they contain further levels to follow
+        #For each directory tag we find, build an onscreen link to drill down into the library
+        SectionTags=tree.findall('Directory')
+        for object in SectionTags:
+            
+            arguments=dict(object.items())
+            arguments['thumb']=""
+            #Set up some dictionaries with defaults that we are going to pass to addDir/addLink
+            properties={}
+
+            #Start pulling out information from the parsed XML output. Assign to various variables
+            try:
+                properties['title']=arguments['title']
+            except:
+                properties['title']="unknown"
+             
+            try:
+                arguments['art']="http://"+server[1]+":32400"+arguments['art']
+            except: pass
+           
+            
+            print "art is " + arguments['art']
+            
+            #Determine what we are going to do process after a link is selected by the user, based on the content we find
+            if arguments['type'] == 'show':
+                window="VideoLibrary"
+                mode=1
+            if  arguments['type'] == 'movie':
+                window="VideoLibrary"
+                mode=2
+            if  arguments['type'] == 'artist':
+                window="MusicLibrary"
+                mode=3
+                             
+            if g_secondary == "true":
+                s_url='http://'+server[1]+':32400/library/sections/'+arguments['key']+"&mode=0&name="+urllib.quote_plus(server[0])
+            else:
+                #Build URL with the mode to use and key to further XML data in the library
+                s_url='http://'+server[1]+':32400/library/sections/'+arguments['key']+'/all'+"&mode="+str(mode)+"&name="+urllib.quote_plus(server[0])
+                
+            #Build that listing..
+            WINDOW.setProperty("plexbmc.%d.title" % (sectionCount) , properties['title'])
+            WINDOW.setProperty("plexbmc.%d.subtitle" % (sectionCount), server[0])
+            WINDOW.setProperty("plexbmc.%d.url" % (sectionCount), s_url )
+            WINDOW.setProperty("plexbmc.%d.mode" % (sectionCount), str(mode) )
+            WINDOW.setProperty("plexbmc.%d.window" % (sectionCount), window )
+            WINDOW.setProperty("plexbmc.%d.art" % (sectionCount), arguments['art'] )
+            
+            printDebug("Building window properties index [" + str(sectionCount) + "] which is [" + properties['title'] + "]", skin.__name__)
+            
+            sectionCount += 1
+    
+    try:
+        printDebug("Clearing properties from [" + str(sectionCount) + "] to [" + WINDOW.getProperty("plexbmc.sectionCount") + "]", skin.__name__)
+
+        for i in range(sectionCount, int(WINDOW.getProperty("plexbmc.sectionCount"))+1):
+            WINDOW.clearProperty("plexbmc.%d.title" % ( i ) )
+            WINDOW.clearProperty("plexbmc.%d.subtitle" % ( i ) )
+            WINDOW.clearProperty("plexbmc.%d.url" % ( i ) )
+            WINDOW.clearProperty("plexbmc.%d.mode" % ( i ) )
+            WINDOW.clearProperty("plexbmc.%d.window" % ( i ) )
+            WINDOW.clearProperty("plexbmc.%d.art" % ( i ) )
+    except:
+        pass
+
+    printDebug("Total number of skin sections is [" + str(sectionCount) + "]", skin.__name__)
+    WINDOW.setProperty("plexbmc.sectionCount", str(sectionCount))
+
+   
 ##So this is where we really start the plugin.
 
-#first thing, parse the arguments, as this has the data we need to use.              
-params=get_params()
-if g_debug == "true": print "PleXBMC -> " + str(params)
+print "Script argument is " + str(sys.argv[1])
+if str(sys.argv[1]) == "skin":
+    skin()
+else:
+    pluginhandle = int(sys.argv[1])
 
-#Set up some variables
-url=None
-name=None
-mode=None
-resume=None
-id=None
-duration=None
+    #first thing, parse the arguments, as this has the data we need to use.              
+    params=get_params()
+    if g_debug == "true": print "PleXBMC -> " + str(params)
 
-#Now try and assign some data to them
-try:
-        #url=urllib.unquote_plus(params["url"])
-        url=params['url']
-except:
-        pass
-try:
-        name=urllib.unquote_plus(params["name"])
-except:
-        pass
-try:
-        mode=int(params["mode"])
-except:
-        pass
-try:
-        resume=int(params["resume"])
-except:
-        resume=0
-try:
-        id=params["id"]
-except:
-        pass
-try:
-        duration=params["duration"]
-except:
-        duration=0
-        
-if g_debug == "true":
-    print "PleXBMC -> Mode: "+str(mode)
-    print "PleXBMC -> URL: "+str(url)
-    print "PleXBMC -> Name: "+str(name)
-    print "PleXBMC -> ID: "+ str(id)
-    print "PleXBMC -> Duration: " + str(duration)
+    #Set up some variables
+    url=None
+    name=None
+    mode=None
+    resume=None
+    id=None
+    duration=None
 
-#Run a function based on the mode variable that was passed in the URL
+    #Now try and assign some data to them
+    try:
+            #url=urllib.unquote_plus(params["url"])
+            url=params['url']
+    except:
+            pass
+    try:
+            name=urllib.unquote_plus(params["name"])
+    except:
+            pass
+    try:
+            mode=int(params["mode"])
+    except:
+            pass
+    try:
+            resume=int(params["resume"])
+    except:
+            resume=0
+    try:
+            id=params["id"]
+    except:
+            pass
+    try:
+            duration=params["duration"]
+    except:
+            duration=0
+            
+    if g_debug == "true":
+        print "PleXBMC -> Mode: "+str(mode)
+        print "PleXBMC -> URL: "+str(url)
+        print "PleXBMC -> Name: "+str(name)
+        print "PleXBMC -> ID: "+ str(id)
+        print "PleXBMC -> Duration: " + str(duration)
 
-if mode!=5:
-    __settings__.setSetting('resume', '')
+    #Run a function based on the mode variable that was passed in the URL
 
-if mode==None or url==None or len(url)<1:
-        ROOT()
-elif mode == 0:
-        getDirectory(url)
-elif mode==1:
-        SHOWS(url)
-elif mode==2:
-        MoviesET(url)
-elif mode==3:
-        artist(url)
-elif mode==4:
-        Seasons(url)
-elif mode==5:
-        PLAYEPISODE(id,url,resume, duration)
-elif mode==6:
-        EPISODES(url)
-elif mode==7:
-        PlexPlugins(url)
-elif mode==10:
-        StartMovies()
-elif mode==11:
-        StartTV()
-elif mode==12:
-        PLAY(url)
-elif mode==13:
-        selectMedia(id,url,resume,duration)
-elif mode ==14:
-        albums(url)
-elif mode == 15:
-        tracks(url)
-elif mode==16:
-        photo(url)
-elif mode==17:
-        music(url)
-elif mode==18:
-    videoPluginPlay(url)
-elif mode==19:
-    plexOnline(url)
-elif mode==20:
-    install(url,name)
+    if mode!=5:
+        __settings__.setSetting('resume', '')
+
+    if mode==None or url==None or len(url)<1:
+            ROOT()
+    elif mode == 0:
+            getDirectory(url)
+    elif mode==1:
+            SHOWS(url)
+    elif mode==2:
+            MoviesET(url)
+    elif mode==3:
+            artist(url)
+    elif mode==4:
+            Seasons(url)
+    elif mode==5:
+            PLAYEPISODE(id,url,resume, duration)
+    elif mode==6:
+            EPISODES(url)
+    elif mode==7:
+            PlexPlugins(url)
+    elif mode==10:
+            StartMovies()
+    elif mode==11:
+            StartTV()
+    elif mode==12:
+            PLAY(url)
+    elif mode==13:
+            selectMedia(id,url,resume,duration)
+    elif mode ==14:
+            albums(url)
+    elif mode == 15:
+            tracks(url)
+    elif mode==16:
+            photo(url)
+    elif mode==17:
+            music(url)
+    elif mode==18:
+        videoPluginPlay(url)
+    elif mode==19:
+        plexOnline(url)
+    elif mode==20:
+        install(url,name)
 
 print "===== PLEXBMC STOP ====="
    
