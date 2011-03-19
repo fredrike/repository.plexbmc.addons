@@ -54,8 +54,8 @@
     <description>   MediaStream Redux is a complete remake from the ground up of Team Razorfish's MediaStream skin and only uses the original skins graphics (also its home window layout and some of its views) and is for 16x9 only no 4x3 support like the original.[CR]   I made this skin because coming from the Project Mayhem skins I loved the original Mediastream skin looks but found it very hard to navigate my way around in the original (old habits die hard). So this skin Navigates more like the PM skins (Menu is on the left hand side)[CR]  All credit to Team Razorfish for the original concept and graphics used in this version</description>
     <platform>all</platform>
   </extension>
+  </addon>
   
-  <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="skin.confluence.plexbmc"
   version="0.2-1.1.0"
@@ -110,9 +110,5 @@
     <platform>all</platform>
   </extension>
 </addon>
-
   
-</addon>
-
-    
 </addons>
