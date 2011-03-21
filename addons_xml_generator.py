@@ -88,6 +88,6 @@ if ( __name__ == "__main__" ):
 			print "Creating archive: " + name
 			zipf = zipfile.ZipFile(os.path.join(addon.getAttribute("id"), name), "w")
 			path = addon.getAttribute("id")
-			recursive_zip(zipf, path, addon.getAttribute("id"))
+			recursive_zip(zipf, path + ".git", addon.getAttribute("id"))
 	 		zipf.close()
 
