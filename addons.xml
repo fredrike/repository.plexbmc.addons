@@ -19,7 +19,7 @@
   </extension>
 </addon>
 
-    <addon id="repository.plexbmc.addons" name="PleXBMC Add-ons for XBMC" version="1.0.0" provider-name="Harley and Hippojay">
+    <addon id="xbmc.repo.plexbmc" name="PleXBMC Add-ons for XBMC" version="1.0.0" provider-name="Harley and Hippojay">
         <extension point="xbmc.addon.repository" name="PleXBMC Addons for XBMC Repository">
             <info compressed="false">http://github.com/fredrike/repository.plexbmc.addons/raw/master/addons.xml</info>
             <checksum>http://github.com/fredrike/repository.plexbmc.addons/raw/master/addons.xml.md5</checksum>
