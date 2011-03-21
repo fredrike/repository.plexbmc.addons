@@ -75,31 +75,6 @@
 </addon>
 
 <addon
-  id="skin.frontseat"
-  version="1.0.1"
-  name="FrontSeat"
-  provider-name="jaaps">
-  <requires>
-    <import addon="xbmc.gui" version="2.11"/>
-  </requires>
-  <extension
-    point="xbmc.gui.skin"
-    defaultresolution="720p"
-    defaultresolutionwide="720p"
-    defaultthemename="textures.xbt"
-    effectslowdown="0.75"
-    debugging="false"/>
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en">FrontSeat skin by jaaps.</summary>
-    <description lang="en">.</description>
-
-    <disclaimer lang="en"></disclaimer>
-
-    <platform>all</platform>
-  </extension>
-</addon>
-
-<addon
   id="skin.mediastream_redux.plexbmc"
   version="1.1.2"
   name="MediaStream Redux"
@@ -120,18 +95,4 @@
     <platform>all</platform>
   </extension>
 </addon>
-
-    <addon id="xbmc.repo.plexbmc" name="PleXBMC Add-ons for XBMC" version="1.0.0" provider-name="Harley and Hippojay">
-        <extension point="xbmc.addon.repository" name="PleXBMC Addons for XBMC Repository">
-            <info compressed="false">http://github.com/fredrike/repository.plexbmc.addons/raw/master/addons.xml</info>
-            <checksum>http://github.com/fredrike/repository.plexbmc.addons/raw/master/addons.xml.md5</checksum>
-            <datadir zip="true">http://github.com/fredrike/repository.plexbmc.addons/raw/master/</datadir>
-        </extension>
-        <extension point="xbmc.addon.metadata">
-            <summary>Install PleXBMC Addons</summary>
-            <description>Download and install Plex related addons for XBMC</description>
-            <disclaimer>-</disclaimer>
-            <platform>all</platform>
-        </extension>
-    </addon>
 </addons>
