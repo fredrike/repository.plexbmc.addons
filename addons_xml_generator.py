@@ -5,6 +5,7 @@ import md5
 import xml.dom.minidom
 import zipfile
 import glob
+import shutil
 
 
 class Generator:
@@ -88,6 +89,22 @@ if ( __name__ == "__main__" ):
 			print "Creating archive: " + name
 			zipf = zipfile.ZipFile(os.path.join(addon.getAttribute("id"), name), "w")
 			path = addon.getAttribute("id")
-			recursive_zip(zipf, path + ".git", addon.getAttribute("id"))
-	 		zipf.close()
+			if os.path.isdir(path + ".git"):
+				recursive_zip(zipf, path + ".git", addon.getAttribute("id"))
+			else:
+				recursive_zip(zipf, path, addon.getAttribute("id"))
+			zipf.close()
+
+			if not os.path.isfile(os.path.join(path, "icon.png")):
+				try:
+					shutil.copy(os.path.join(path+".git", "icon.png"), os.path.join(path, "icon.png"))
+				except Exception, e:
+# oops
+					print "%s" % ( e, )
+			try:
+				shutil.copy(os.path.join(path+".git", "changelog.txt"), os.path.join(path, "changelog-"+addon.getAttribute("version")+".txt"))
+			except Exception, e:
+# oops
+				print "An error occurred saving %s file!\n%s" % ( file, e, )
+
 
