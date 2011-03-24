@@ -100,7 +100,7 @@
 </addon>
 
 <addon
-  id="skin.mediastream_redux.plexbmc"
+  id="skin.mediastream_redux"
   version="1.1.2"
   name="MediaStream Redux"
   provider-name="Jezz_X (graphics by team razorfish)">
@@ -123,9 +123,9 @@
 
     <addon id="xbmc.repo.plexbmc" name="PleXBMC Add-ons for XBMC" version="1.0.0" provider-name="Harley and Hippojay">
         <extension point="xbmc.addon.repository" name="PleXBMC Addons for XBMC Repository">
-            <info compressed="false">http://github.com/fredrike/repository.plexbmc.addons/raw/master/addons.xml</info>
-            <checksum>http://github.com/fredrike/repository.plexbmc.addons/raw/master/addons.xml.md5</checksum>
-            <datadir zip="true">http://github.com/fredrike/repository.plexbmc.addons/raw/master/</datadir>
+            <info compressed="false">http://erlandssson.nu/repository.plexbmc.addons/addons.xml</info>
+            <checksum>http://erlandssson.nu/repository.plexbmc.addons/addons.xml.md5</checksum>
+            <datadir zip="true">http://erlandssson.nu/repository.plexbmc.addons/</datadir>
         </extension>
         <extension point="xbmc.addon.metadata">
             <summary>Install PleXBMC Addons</summary>
