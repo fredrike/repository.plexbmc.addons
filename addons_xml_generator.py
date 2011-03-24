@@ -1,5 +1,6 @@
 """ addons.xml generator """
-
+import warnings
+warnings.filterwarnings("ignore")
 import os
 import md5
 import xml.dom.minidom
@@ -33,6 +34,7 @@ class Generator:
                 if ( not os.path.isdir( addon ) or addon == ".svn" or addon == ".git" ): continue
                 # create path
                 _path = os.path.join( addon, "addon.xml" )
+                if not os.path.isfile(_path): continue
                 # split lines for stripping
                 xml_lines = open( _path, "r" ).read().splitlines()
                 # new addon
@@ -86,25 +88,31 @@ if ( __name__ == "__main__" ):
  
 		for addon in xml.dom.minidom.parse("addons.xml").getElementsByTagName("addon"):
 			name = addon.getAttribute("id") + "-" + addon.getAttribute("version") + ".zip"
-			print "Creating archive: " + name
-			zipf = zipfile.ZipFile(os.path.join(addon.getAttribute("id"), name), "w")
 			path = addon.getAttribute("id")
-			if os.path.isdir(path + ".git"):
-				recursive_zip(zipf, path + ".git", addon.getAttribute("id"))
-			else:
-				recursive_zip(zipf, path, addon.getAttribute("id"))
-			zipf.close()
+			if not os.path.isfile(os.path.join(path,name)):
+				print "Creating archive: " + name
+				if not os.path.isdir(path):
+					os.mkdir(path);
+				zipf = zipfile.ZipFile(os.path.join(path, name), "w")
+				if os.path.isdir(path + ".git"):
+					recursive_zip(zipf, path + ".git", addon.getAttribute("id"))
+				else:
+					recursive_zip(zipf, path, addon.getAttribute("id"))
+				zipf.close()
 
 			if not os.path.isfile(os.path.join(path, "icon.png")):
+				if os.path.isfile(os.path.join(path+".git", "icon.png")):
+					try:
+						shutil.copy(os.path.join(path+".git", "icon.png"), os.path.join(path, "icon.png"))
+					except Exception, e:
+# oops
+						print "%s" % ( e, )
+			
+			if os.path.isfile(os.path.join(path+".git", "changelog.txt")):
 				try:
-					shutil.copy(os.path.join(path+".git", "icon.png"), os.path.join(path, "icon.png"))
+					shutil.copy(os.path.join(path+".git", "changelog.txt"), os.path.join(path, "changelog-"+addon.getAttribute("version")+".txt"))
 				except Exception, e:
 # oops
-					print "%s" % ( e, )
-			try:
-				shutil.copy(os.path.join(path+".git", "changelog.txt"), os.path.join(path, "changelog-"+addon.getAttribute("version")+".txt"))
-			except Exception, e:
-# oops
-				print "An error occurred saving %s file!\n%s" % ( file, e, )
+					print "An error occurred creating  %s.\n%s" % ( file, e, )
 
 
