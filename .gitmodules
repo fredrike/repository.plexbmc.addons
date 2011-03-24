@@ -1,8 +1,8 @@
 [submodule "skin.frontseat.git"]
 	path = skin.frontseat.git
 	url = git://github.com/HooliganHarls/skin.frontseat.git
-[submodule "skin.mediastream_redux.plexbmc.git"]
-	path = skin.mediastream_redux.plexbmc.git
+[submodule "skin.mediastream_redux.git"]
+	path = skin.mediastream_redux.git
 	url = git://github.com/hippojay/skin.mediastream_redux.plexbmc.git
 [submodule "skin.confluence.plexbmc.git"]
 	path = skin.confluence.plexbmc.git
