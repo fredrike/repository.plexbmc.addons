@@ -2,7 +2,7 @@
 <addons>
 <addon  id="plugin.video.plexbmc"
         name="PleXBMC"
-        version="1.7.5a"
+        version="1.7.6b"
         provider-name="Harley Hooligan and Hippojay">
   <requires>
     <import addon="xbmc.python" version="1.0"/>
