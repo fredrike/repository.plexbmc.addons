@@ -1,8 +1,3 @@
-plugin.video.plexbmc/*.zip
-skin.confluence.plexbmc/*.zip
-skin.frontseat/*.zip
-skin.mediastream_redux/*.zip
-skin.cirrus extended v2/*.zip
-skin.cirrus-ex.plexbmc/*.zip
-skin.quartz.plexbmc/*.zip
+*.zip
+!xbmc.repo.plexbmc/xbmc.repo.plexbmc-1.0.0.zip
 changelog*.txt
