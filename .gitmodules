@@ -13,3 +13,6 @@
 [submodule "plugin.video.plexbmc.git"]
 	path = plugin.video.plexbmc.git
 	url = git://github.com/hippojay/plugin.video.plexbmc.git
+[submodule "skin.quartz.plexbmc.git"]
+	path = skin.quartz.plexbmc.git
+	url = https://github.com/hippojay/skin.quartz.plexbmc.git
