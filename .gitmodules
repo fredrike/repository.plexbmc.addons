@@ -1,6 +1,6 @@
 [submodule "skin.cirrus-ex.plexbmc.git"]
 	path = skin.cirrus-ex.plexbmc.git
-	url = git://github.com/hippojay/skin.cirrus-ex.plexbmc.gi
+	url = git://github.com/hippojay/skin.cirrus-ex.plexbmc.git
 [submodule "skin.frontseat.git"]
 	path = skin.frontseat.git
 	url = git://github.com/HooliganHarls/skin.frontseat.git
