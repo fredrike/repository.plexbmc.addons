@@ -16,3 +16,6 @@
 [submodule "skin.quartz.plexbmc.git"]
 	path = skin.quartz.plexbmc.git
 	url = https://github.com/hippojay/skin.quartz.plexbmc.git
+[submodule "skin.aeon-nox.plexbmc.git"]
+	path = skin.aeon-nox.plexbmc.git
+	url = https://github.com/hippojay/skin.aeon-nox.plexbmc.git
