@@ -2,7 +2,7 @@
 <addons>
 <addon  id="plugin.video.plexbmc"
         name="PleXBMC"
-        version="1.9.4"
+        version="1.9.4.2"
         provider-name="Hippojay (plexbmc@h-jay.com). Initial build by Hooligan Harley">
   <requires>
     <import addon="xbmc.python" version="1.0"/>
@@ -17,22 +17,6 @@
     <summary lang="en">Browse and play local video, music and photo media files managed by Plex Media Server.</summary>
     <description lang="en">Browse and play local video, music and photo media files managed by Plex Media Server.</description>
   </extension>
-</addon>
-
-<addon id="skin.cirrus extended v2" version="2.04" name="cirrus extended v2" provider-name="Butchabay and Malexx">
-	<requires>
-		<import addon="xbmc.gui" version="2.11"/>
-			<import addon="script.recentlyadded" version="1.0.8"/>
-			<import addon="script.tv.show.next.aired" version="2.0.1"/>
-			<import addon="script.logo-downloader" version="2.1.3"/>
-	</requires>
-	<extension  point="xbmc.gui.skin" defaultresolution="720p"  defaultresolutionwide="720p" defaultthemename="Textures.xbt"  effectslowdown="1.00" debugging="false"/>
-	<extension point="xbmc.addon.metadata">
-		<platform>all</platform>
-		<minversion app="xbmc">33035</minversion>
-		<summary>Skin Created by Crookas - Modded by Butchabay and Malexx</summary>
-		<description>Mod based on Cirrus - Goal is to keep the Original Look and Functions and extend them to use all the Fun Stuff XBMC has to offer</description>
-	</extension>
 </addon>
 
 <addon
@@ -103,11 +87,11 @@
   </extension>
 </addon>
 
-    <addon id="xbmc.repo.plexbmc" name="PleXBMC Add-ons for XBMC" version="1.0.0" provider-name="Harley and Hippojay">
+    <addon id="xbmc.repo.plexbmc" name="PleXBMC Add-ons for XBMC" version="1.0.1" provider-name="Harley and Hippojay">
         <extension point="xbmc.addon.repository" name="PleXBMC Addons for XBMC Repository">
-            <info compressed="false">http://erlandssson.nu/repository.plexbmc.addons/addons.xml</info>
-            <checksum>http://erlandssson.nu/repository.plexbmc.addons/addons.xml.md5</checksum>
-            <datadir zip="true">http://erlandssson.nu/repository.plexbmc.addons/</datadir>
+          <info compressed="false">http://fredrike.github.io/repository.plexbmc.addons/addons.xml</info>
+            <checksum>http://fredrike.github.io/repository.plexbmc.addons/addons.xml.md5</checksum>
+            <datadir zip="true">http://fredrike.github.io/repository.plexbmc.addons/</datadir>
         </extension>
         <extension point="xbmc.addon.metadata">
             <summary>Install PleXBMC Addons</summary>
