@@ -1,0 +1,15 @@
+[B] Forked by hippojay for PleXBMC integration[/B]
+[B] 0.4.2 [/b] Added Plex Style watched icons
+[B] 0.4.1 [/b] Modified skin support for PleXBMC.  Added media flag support.
+
+[B]1.1.0[/B]
+
+- Redesigned the video and Music OSD Info and controls
+- Added more images for codec flagging on videos and audio
+- Added all the windows needed for the new Addon Browser
+- Removed the right hand side bar graphic from all windows and only made the left hand one visible if a menu is there
+- Lots of other little changes
+
+[B]1.0.0[/B]
+
+- Initial Commit to the SVN
